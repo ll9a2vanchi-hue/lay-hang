@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lấy hàng · v1.8</title>
+<title>Lấy hàng · v1.9</title>
 <meta name="theme-color" content="#f5f7fb"><link rel="manifest" href="./manifest.webmanifest">
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#778197;--line:#e7eaf0;--accent:#2563eb;--ok:#16803c;--danger:#dc2626}
@@ -14,14 +14,14 @@
 @media(max-width:430px){.app{padding:10px 10px 26px}.uiTop{margin-bottom:10px}.brand h1{font-size:25px}.historyBtn span{display:none}.historyBtn{width:42px;padding:0;font-size:18px}.card{padding:10px}.form{gap:7px!important}.form input,.form select,.add{min-height:46px}.tabs{margin-top:10px}.item{padding:10px}.name{font-size:15px}.meta{font-size:11.5px}.qty{font-size:13px}.done,.undo,.del{font-size:13px;padding:7px 9px}}
 </style></head>
 <body><main class="app">
-<header class="top uiTop"><div class="brand"><h1>Lấy hàng <span class="version">v1.8</span></h1><div id="syncStatus" class="syncStatus">🔄 Đang khởi động...</div></div><div class="topActions"><button id="historyBtn" class="historyBtn">🕘 <span>Lịch sử</span></button><button class="settings-btn" id="settingsBtn">⚙</button></div></header>
+<header class="top uiTop"><div class="brand"><h1>Lấy hàng <span class="version">v1.9</span></h1><div id="syncStatus" class="syncStatus">🔄 Đang khởi động...</div></div><div class="topActions"><button id="historyBtn" class="historyBtn">🕘 <span>Lịch sử</span></button><button class="settings-btn" id="settingsBtn">⚙</button></div></header>
 <section class="card"><form id="form" class="form"><input id="name" autocomplete="off" placeholder="Tên sản phẩm" required><input id="qty" type="number" inputmode="numeric" min="1" value="1" required><select id="unit"></select><button class="add">Lấy hàng</button></form></section>
 <div class="tabs"><button class="tab active" data-tab="pending">Chờ lấy <span id="pendingCount">0</span></button><button class="tab" data-tab="done">Đã lấy <span id="doneCount">0</span></button></div><div id="list" class="list"></div><div class="foot">Offline-first · dữ liệu lưu trên máy và tự đồng bộ khi có mạng</div>
 <div id="historyOverlay" class="historyOverlay"><section class="historyPanel"><div class="historyHead"><h2>Lịch sử đã lấy</h2><button id="closeHistory" class="closeHistory">×</button></div><input id="historySearch" class="historySearch" placeholder="Tìm tên sản phẩm..."><div id="historyCount" class="historyCount"></div><div id="historyList" class="list"></div></section></div>
 <div id="editOverlay" class="editOverlay"><section class="editPanel"><h2>Chỉnh sửa món hàng</h2><input id="editName"><div class="editRow"><input id="editQty" type="number" min="1"><select id="editUnit"></select></div><div class="editActions"><button id="editCancel" class="editCancel">Hủy</button><button id="editSave" class="editSave">Lưu thay đổi</button></div></section></div></main>
 <div class="modal-bg" id="settingsModal"><div class="modal"><div class="modal-head"><h2>Cài đặt đơn vị</h2><button class="close" id="closeSettings">×</button></div><div class="unit-add"><input id="newUnit" placeholder="Thêm đơn vị"><button id="addUnit">+ Thêm</button></div><div id="unitList" class="unit-list"></div></div></div>
 <script>
-const DB_URL="https://lay-hang-default-rtdb.asia-southeast1.firebasedatabase.app/layhang.json",LOCAL_KEY="layhang-v1.7-state",DIRTY_KEY="layhang-v1.7-dirty",OLD_LOCAL_KEY="layhang-v1.6-state";
+const DB_URL="https://lay-hang-default-rtdb.asia-southeast1.firebasedatabase.app/layhang.json",LOCAL_KEY="layhang-v1.9-state",DIRTY_KEY="layhang-v1.9-dirty",OLD_LOCAL_KEY="layhang-v1.7-state";
 const $=x=>document.querySelector(x),esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),fmt=t=>{const d=new Date(t);return d.toLocaleDateString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric"})+" · "+d.toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"})};
 const DEFAULT_UNITS=["bộ","cái","chai","cuộn","đôi","gói","hộp","mét","túi","vỉ"],sortUnits=a=>[...new Set((a||[]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"vi",{sensitivity:"base"}));
 let state={jobs:[],units:sortUnits(DEFAULT_UNITS),updatedAt:0},tab="pending",editingId=null,syncing=false;
